@@ -1,44 +1,46 @@
-// api.js
-const API_BASE_URL = 'https://playground.4geeks.com/apis/fake/todos/user/finallgirll';
+const API_BASE_URL = 'https://playground.4geeks.com/apis/fake/todos/user/';
 
+// Get list of todos for a particular user
 export const fetchTasks = (finallgirll) => {
   const url = `${API_BASE_URL}${finallgirll}`;
   return fetch(url)
     .then(response => response.json())
     .catch(error => {
       console.error('Error fetching tasks:', error);
-      throw error; // Rethrow the error for the component to handle
+      throw error;
     });
 };
 
-export const updateTodoList = (finallgirll, updatedTasks) => {
-  const url = `${API_BASE_URL}${finallgirll}`;
-  return fetch(url, {
-    method: "PUT",
-    body: JSON.stringify(updatedTasks),
-    headers: {
-      "Content-Type": "application/json"
-    }
-  })
-  .then(response => response.json())
-  .catch(error => {
-    console.error('Error updating todo list:', error);
-    throw error; // Rethrow the error for the component to handle
-  });
-};
-
+// Create a new todo list for a particular user
 export const createTodoList = (finallgirll) => {
   const url = `${API_BASE_URL}${finallgirll}`;
   return fetch(url, {
-    method: "POST",
-    body: JSON.stringify([]), // Empty array as initial todo list
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json"
-    }
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify([])
   })
-  .then(response => response.json())
-  .catch(error => {
-    console.error('Error creating todo list:', error);
-    throw error; // Rethrow the error for the component to handle
-  });
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error creating todo list:', error);
+      throw error;
+    });
+};
+
+// Update the entire todo list for a particular user
+export const updateTodoList = (finallgirll, todoList) => {
+  const url = `${API_BASE_URL}${finallgirll}`;
+  return fetch(url, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(todoList)
+  })
+    .then(response => response.json())
+    .catch(error => {
+      console.error('Error updating todo list:', error);
+      throw error;
+    });
 };
