@@ -1,24 +1,43 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { fetchTasks, updateTodoList } from '../api';
 
 function TodoList() {
-
   const [tasks, setTasks] = useState([]);
-  
   const [inputValue, setInputValue] = useState('');
 
- 
+  useEffect(() => {
+    fetchTasks()
+      .then(data => setTasks(data))
+      .catch(error => console.error('Error fetching tasks:', error));
+  }, []);
+
   const addTask = () => {
     if (inputValue.trim() !== '') {
-      setTasks([...tasks, inputValue.trim()]);
-      setInputValue(''); 
+      
+      const newTask = { label: inputValue.trim(), done: false };
+
+      const updatedTasks = [...tasks, newTask];
+      setTasks(updatedTasks);
+
+      
+      updateTodoList(updatedTasks)
+      .then(response => console.log('Task added successfully:', response))
+      .catch(error => console.error('Error adding task:', error));
+
+      
+      setInputValue('');
     }
   };
 
-  
   const removeTask = (index) => {
-    const updatedTasks = [...tasks];
-    updatedTasks.splice(index, 1);
+    
+    const updatedTasks = tasks.filter((task, i) => i !== index);
     setTasks(updatedTasks);
+
+    
+    updateTodoList(updatedTasks)
+      .then(response => console.log('Task deleted successfully:', response))
+      .catch(error => console.error('Error deleting task:', error));
   };
 
   return (
@@ -39,7 +58,7 @@ function TodoList() {
       <ul className="list-group">
         {tasks.map((task, index) => (
           <li className="list-group-item d-flex justify-content-between align-items-center" key={index}>
-            {task}
+            {task.label} {/* Display task label instead of task itself */}
             <button className="btn btn-danger" onClick={() => removeTask(index)}>Remove</button>
           </li>
         ))}
